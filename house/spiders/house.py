@@ -7,15 +7,16 @@ class HouseSpider(scrapy.Spider):
     def start_requests(self):
         start_url = 'https://gz.lianjia.com/ershoufang/pg'
 
-        for i in range(1, 3):
+        for i in range(1, 2):
             yield scrapy.Request(url=start_url + str(i), callback=self.parse)
 
     def parse(self, response):
         for info in response.css("li.clear"):
             yield {
-                'title': info.css("div.title > a::text").extract_first(),
+                'house_name': info.css("div.houseInfo > a::text").extract_first(),
+                'house_link': info.css("div.houseInfo > a::attr(href)").extract_first(),
                 'price': info.css("div.totalPrice > span::text").extract_first(),
-                'follow': info.css("div.followInfo::text").extract_first()
+                'follow': info.css("div.followInfo::text").re('.*')
             }
 
         # url = self.start_urls
