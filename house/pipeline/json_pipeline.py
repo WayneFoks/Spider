@@ -11,12 +11,14 @@ import json
 class JsonWriterPipeline(object):
 
     def open_spider(self, spider):
-        self.file = open('./data/house-pl.json', 'w')
+        # json
+        self.json_file = open('./spiders/data/house.json', 'w')
 
     def close_spider(self, spider):
-        self.file.close()
+        self.json_file.close()
 
     def process_item(self, item, spider):
-        line = json.dumps(dict(item)) + ",\n"
-        self.file.write(line)
+        # json
+        line = json.dumps(dict(item), ensure_ascii=False) + ",\n"
+        self.json_file.write(line)
         return item

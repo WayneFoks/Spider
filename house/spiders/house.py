@@ -4,11 +4,13 @@ import scrapy
 class HouseSpider(scrapy.Spider):
     name = "house"
     number = 0
+    debug = True
 
     def start_requests(self):
         start_url = 'https://gz.lianjia.com/ershoufang/pg'
 
-        for i in range(1, 2):  # 643.4
+        last_page = 2 if self.debug else 644
+        for i in range(1, last_page):  # 643.4
             yield scrapy.Request(url=start_url + str(i), callback=self.parse)
 
     def parse(self, response):
@@ -17,7 +19,8 @@ class HouseSpider(scrapy.Spider):
             if next_page is not None:
                 # next_page = response.urljoin(next_page)
                 yield scrapy.Request(next_page, callback=self.parse_house)
-            break  # todo
+            if self.debug:
+                break  # todo
 
     def parse_house(self, response):
         def extract_with_css(query):
