@@ -1,5 +1,6 @@
 import scrapy
 
+
 # 在house工程目录下执行
 # cd house
 # scrapy crawl house -s JOBDIR=./crawls/somespider-1
@@ -30,21 +31,28 @@ class HouseSpider(scrapy.Spider):
         def extract_with_css(query):
             return response.css(query)
 
+        def getValueSafely(list, index):
+            if len(list) > index:
+                return list[index]
+            else:
+                return ""
+
         self.number += 1
         yield {
             'number': self.number,
-            '总价': extract_with_css('div.price > span.total::text').extract(),
-            '单价': extract_with_css('div.unitPrice > span.unitPriceValue::text').extract(),
-            '建筑面积': extract_with_css('div.area > div.mainInfo::text').extract(),
-            '建筑面积1': extract_with_css('div.area > div.mainInfo::text').re('^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$'),
-            '建筑时间': extract_with_css('div.area > div.subInfo::text').extract(),
-            '建筑时间1': extract_with_css('div.area > div.subInfo::text').re('^[1-9]\d*|0$'),
-            '朝向': extract_with_css('div.type > div.mainInfo::text').extract(),
-            '小区': extract_with_css('div.communityName > a.info::text').extract(),
-            '户型': extract_with_css('div.room > div.mainInfo::text').extract(),
+            '总价': extract_with_css('div.price > span.total::text').extract_first(),
+            '单价': extract_with_css('div.unitPrice > span.unitPriceValue::text').extract_first(),
+            '建筑面积': extract_with_css('div.area > div.mainInfo::text').extract_first(),
+            '建筑面积1': getValueSafely(extract_with_css('div.area > div.mainInfo::text')[0].re('(\d*\.*\d*)'), 0),
+            '建筑时间': extract_with_css('div.area > div.subInfo::text').extract_first(),
+            '建筑时间1': getValueSafely(extract_with_css('div.area > div.subInfo::text')[0].re('(\d*)'), 0),
+            '朝向': extract_with_css('div.type > div.mainInfo::text').extract_first(),
+            '小区': extract_with_css('div.communityName > a.info::text').extract_first(),
+            '户型': extract_with_css('div.room > div.mainInfo::text').extract_first(),
             '户型2': response.css('div.introContent').css('div.content').css('li::text')[0].extract(),
-            '楼层': extract_with_css('div.room > div.subInfo::text').extract(),
-            # '楼层2': extract_with_css('div.room > div.subInfo::text').extract(),
+            '楼层': extract_with_css('div.room > div.subInfo::text').extract_first(),
+            '楼层1': getValueSafely(extract_with_css('div.room > div.subInfo::text').extract_first().split('/'), 0),
+            '楼层2': getValueSafely(extract_with_css('div.room > div.subInfo::text').extract_first().split('/'), 1),
             '装修': response.css('div.introContent').css('div.content').css('li::text')[8].extract(),
             '梯户比': response.css('div.introContent').css('div.content').css('li::text')[9].extract(),
             '电梯': response.css('div.introContent').css('div.content').css('li::text')[10].extract(),
@@ -55,7 +63,6 @@ class HouseSpider(scrapy.Spider):
                 'span::text')[1].extract(),
             '房屋年限': response.css('div.introContent').css('div.transaction').css('li')[4].css(
                 'span::text')[1].extract(),
-            '地铁': extract_with_css('div.showbasemore > a.is_near_subway::text').extract(),
-            '税收': extract_with_css('div.showbasemore > a.taxfree::text').extract(),
-
+            '地铁': extract_with_css('a.is_near_subway::text').extract_first(),
+            '税收': extract_with_css('a.taxfree::text').extract_first(),
         }
