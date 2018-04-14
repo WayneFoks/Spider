@@ -10,7 +10,7 @@ from scrapy.exporters import CsvItemExporter
 
 
 class CsvWriterPipeline(object):
-    has_header = False
+    write_index = 0
 
     def open_spider(self, spider):
         self.csv_file = open('../crawls/data/house.csv', 'a+')
@@ -26,8 +26,9 @@ class CsvWriterPipeline(object):
         # # csv
         # print("################" + str(item))
         # self.exporter.export_item(str(item))
-        if ~self.has_header:
+        if self.write_index == 0:
+            self.write_index += 1
             self.writer.writerow([key for key in item.keys()])
-            self.has_header = True
+
         self.writer.writerow([item[key] for key in item.keys()])
         return item

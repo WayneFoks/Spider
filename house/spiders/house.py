@@ -25,7 +25,7 @@ class HouseSpider(scrapy.Spider):
                 # next_page = response.urljoin(next_page)
                 yield scrapy.Request(next_page, callback=self.parse_house)
             if self.debug:
-                break  # todo
+                break
 
     def parse_house(self, response):
         def extract_with_css(query):
