@@ -13,7 +13,7 @@ class CsvWriterPipeline(object):
     has_header = False
 
     def open_spider(self, spider):
-        self.csv_file = open('./crawls/data/house.csv', 'a+')
+        self.csv_file = open('../crawls/data/house.csv', 'a+')
         self.writer = csv.writer(self.csv_file, lineterminator='\n')
 
         # self.exporter = CsvItemExporter(self.csv_file, 'utf-8')

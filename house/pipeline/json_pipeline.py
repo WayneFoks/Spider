@@ -12,7 +12,7 @@ class JsonWriterPipeline(object):
 
     def open_spider(self, spider):
         # json
-        self.json_file = open('./crawls/data/house.json', 'a+')
+        self.json_file = open('../crawls/data/house.json', 'a+')
 
     def close_spider(self, spider):
         self.json_file.close()

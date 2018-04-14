@@ -1,5 +1,7 @@
 import scrapy
 
+# 在house工程目录下执行
+# cd house
 # scrapy crawl house -s JOBDIR=./crawls/somespider-1
 
 class HouseSpider(scrapy.Spider):
