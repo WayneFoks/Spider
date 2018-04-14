@@ -10,18 +10,24 @@ from scrapy.exporters import CsvItemExporter
 
 
 class CsvWriterPipeline(object):
+    has_header = False
 
     def open_spider(self, spider):
-        self.csv_file = open('./spiders/data/house.csv', 'w')
-        self.exporter = CsvItemExporter(self.csv_file, 'utf-8')
-        self.exporter.start_exporting()
+        self.csv_file = open('./spiders/data/house.csv', 'a')
+        self.writer = csv.writer(self.csv_file, lineterminator='\n')
+
+        # self.exporter = CsvItemExporter(self.csv_file, 'utf-8')
+        # self.exporter.start_exporting()
 
     def close_spider(self, spider):
-        self.exporter.finish_exporting()
         self.csv_file.close()
 
     def process_item(self, item, spider):
-        # csv
-        print("################" + str(item))
-        self.exporter.export_item(str(item))
+        # # csv
+        # print("################" + str(item))
+        # self.exporter.export_item(str(item))
+        if ~self.has_header:
+            self.writer.writerow([key for key in item.keys()])
+            self.has_header = True
+        self.writer.writerow([item[key] for key in item.keys()])
         return item

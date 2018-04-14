@@ -63,8 +63,11 @@ ROBOTSTXT_OBEY = False
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
+# The smaller, the prior
 ITEM_PIPELINES = {
     'house.pipeline.json_pipeline.JsonWriterPipeline': 500,
+    'house.pipeline.csv_pipeline.CsvWriterPipeline': 400,
+    # 'house.pipeline.mongo_pipeline.MongoPipeline': 400,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
