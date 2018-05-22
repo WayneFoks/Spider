@@ -8,7 +8,7 @@ import scrapy
 class HouseSpider2(scrapy.Spider):
     name = "house2"
     number = 0
-    debug = True
+    debug = False
 
     def start_requests(self):
         start_url = 'https://gz.lianjia.com/chengjiao/pg'
